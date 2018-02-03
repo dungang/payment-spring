@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import site.dungang.payment.base.INotifyProcessor;
 import site.dungang.payment.base.IPaymentNotify;
@@ -28,8 +26,6 @@ import site.dungang.payment.utils.JsonUtils;
  * @author dungang
  *
  */
-@Service
-@Transactional
 public class PaymentNotifyService implements IPaymentNotify {
 
 	private static Logger logger = LoggerFactory.getLogger(PaymentNotifyService.class);
@@ -44,7 +40,7 @@ public class PaymentNotifyService implements IPaymentNotify {
 	private PaymentFactory paymentFactory;
 
 	@Autowired
-	private IPaymentTradeService dealService;
+	private IPaymentTradeService tradeService;
 
 	@Override
 	public Object doNotify(INotifyProcessor notifyProcessor) throws IOException {
@@ -102,15 +98,15 @@ public class PaymentNotifyService implements IPaymentNotify {
 			String tradeNo) {
 		// 流水订单ID
 		String id = (String) fields.get(outTradeNo);
-		PaymentTrade dealDetail = dealService.selectByPrimaryKey(id);
+		PaymentTrade dealDetail = tradeService.selectByPrimaryKey(id);
 		if(dealDetail == null){
-			dealDetail = dealService.selectByPrimaryKey(id.substring(8));
+			dealDetail = tradeService.selectByPrimaryKey(id.substring(8));
 		}
 		if (null != dealDetail) {
 			dealDetail.setTradeno((String) fields.get(tradeNo));// 支付渠道系统的交易号
 			dealDetail.setNotifyInfo(JsonUtils.toJson(param));// 记录交易的返回的详细信息
 			dealDetail.setStatus("finished");
-			dealService.update(dealDetail);
+			tradeService.update(dealDetail);
 		} else {
 			logger.debug("支付处理流水编号不存在： " + id);
 		}
@@ -126,12 +122,12 @@ public class PaymentNotifyService implements IPaymentNotify {
 		this.paymentFactory = paymentFactory;
 	}
 
-	public IPaymentTradeService getdealService() {
-		return dealService;
+	public IPaymentTradeService gettradeService() {
+		return tradeService;
 	}
 
-	public void setdealService(IPaymentTradeService dealService) {
-		this.dealService = dealService;
+	public void settradeService(IPaymentTradeService tradeService) {
+		this.tradeService = tradeService;
 	}
 
 }

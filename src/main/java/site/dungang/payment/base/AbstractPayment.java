@@ -19,7 +19,7 @@ public abstract class AbstractPayment implements IPayment  {
 	/**
 	 * 支付渠道的交易流水行为
 	 */
-	private IPaymentDealService paymentTradeBehavior = null;
+	private IPaymentTradePersistedService paymentTradeBehavior = null;
 	
 	private Map<String, Ipay> pays;
 
@@ -64,11 +64,11 @@ public abstract class AbstractPayment implements IPayment  {
 		}
 	}
 
-	public IPaymentDealService getPaymentTradeBehavior() {
+	public IPaymentTradePersistedService getPaymentTradeBehavior() {
 		return paymentTradeBehavior;
 	}
 
-	public void setPaymentTradeBehavior(IPaymentDealService paymentTradeBehavior) {
+	public void setPaymentTradeBehavior(IPaymentTradePersistedService paymentTradeBehavior) {
 		this.paymentTradeBehavior = paymentTradeBehavior;
 	}
 

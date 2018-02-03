@@ -8,7 +8,7 @@ import java.util.Map;
  * @author dungang
  *
  */
-public interface IPaymentDealCreator {
+public interface IPaymentTradeCreator {
 
 	/**
 	 * 这里只传递 payment  

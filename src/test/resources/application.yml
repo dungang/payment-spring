@@ -1,0 +1,5 @@
+
+payment:
+  core:
+    payment-class-map:
+      AliPay: site.dungang.alipay.AliPayment

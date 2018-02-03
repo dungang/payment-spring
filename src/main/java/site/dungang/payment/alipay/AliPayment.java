@@ -23,7 +23,7 @@ public class AliPayment extends AbstractPayment {
 	public Ipay buildPay(String apiName) {
 		try {
 			// 反射获取支付接口
-			String payClz = "com.nda.common.payment.service.alipay.AliPay" + apiName;
+			String payClz = "site.dungang.payment.alipay.api.AliPay" + apiName;
 			Ipay iPay = (Ipay) Class.forName(payClz).newInstance();
 
 			logger.debug("加载的支付宝接口： " + payClz);

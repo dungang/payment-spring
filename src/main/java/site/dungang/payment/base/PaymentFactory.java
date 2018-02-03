@@ -8,7 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import site.dungang.payment.utils.PaymentCoreProperties;
+
+@Component
 public class PaymentFactory implements BeanFactoryAware {
 
 	private static Logger logger = LoggerFactory.getLogger(PaymentFactory.class);
@@ -16,6 +21,9 @@ public class PaymentFactory implements BeanFactoryAware {
 	private Map<String, IPayment> payments;
 
 	private static BeanFactory beanFactory;
+	
+	@Autowired
+	private PaymentCoreProperties properties;
 
 	/**
 	 * only for lock
@@ -33,13 +41,19 @@ public class PaymentFactory implements BeanFactoryAware {
 			synchronized (this) {
 				if (null == payments.get(paymentType)) {
 					try {
-						String paymentClz = "com.nda.common.payment.service." + paymentType.toLowerCase() + "." + paymentType + "ment";
-						IPayment iPayment = (IPayment) Class.forName(paymentClz).newInstance();
+						if( null != properties.getPaymentClassMap()
+								&& null != properties.getPaymentClassMap().get(paymentType.toLowerCase())) {
+							String paymentClz = properties.getPaymentClassMap().get(paymentType.toLowerCase());
+							IPayment iPayment = (IPayment) Class.forName(paymentClz).newInstance();
 
-						this.payments.put(paymentType, iPayment);
+							this.payments.put(paymentType, iPayment);
 
-						logger.debug("加载支付渠道：" + paymentClz);
-						return iPayment;
+							logger.debug("加载支付渠道：" + paymentClz);
+							return iPayment;
+						} else {
+							logger.debug("支付渠道的安装错误:"+ paymentType.toLowerCase());
+						}
+						
 					} catch (InstantiationException e) {
 						e.printStackTrace();
 						logger.error("加载支付渠道失败： " + e.getMessage());

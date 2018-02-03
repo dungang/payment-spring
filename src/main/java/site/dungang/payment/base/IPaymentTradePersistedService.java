@@ -7,12 +7,12 @@ import java.util.Map;
  * @author dungang
  *
  */
-public interface IPaymentDealService {
+public interface IPaymentTradePersistedService {
 
 	/**
 	 * 执行流水服务 并返回结果
 	 * @param creator
 	 * @return
 	 */
-	Map<String, Object> execute(IPaymentDealCreator creator);
+	Map<String, Object> execute(IPaymentTradeCreator creator);
 }
